@@ -1,6 +1,6 @@
 import cfg from '../cfg.js';
 
-const accessToken= cfg.ACT;
+const accessToken = cfg.ACT;
 const url = cfg.URL;
 
 const headers = {
@@ -10,13 +10,20 @@ const headers = {
 
 
 
-export async function sendAirtime(transId,network,amount, phone) {
+export async function sendAirtime(transId, network, amount, phone) {
   //validate
   //find by id
   //if can afford debit as pending
   //actually buy it
   //save transaction
   //respond
+  /* return {
+    status: true
+  }
+  res.status(503).json({
+    message: 'Currerntly not availiable'
+  })
+  */
 
   try {
     const payload = {
@@ -25,9 +32,10 @@ export async function sendAirtime(transId,network,amount, phone) {
       plan_type: 'VTU',
       bypass: false,
       amount: amount,
-      'request-id': `Airtime_${transId}`
+      'request-id': `${transId}`
     };
-    console.log(payload)
+
+console.log(payload);
 
     let response = await fetch(`${url}/topup`, {
       method: 'POST',
@@ -35,19 +43,23 @@ export async function sendAirtime(transId,network,amount, phone) {
       body: JSON.stringify(payload)
     });
 
-    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+    // console.log(response);
+  // if (!response.ok) return {status:"failed"}
+  // if (!response.ok) throw new Error
 
-    let data = response.json();
+    let data = await response.json();
     // Handle successful response here
-    console.log('Success:', data);
-
+    console.log(data);
+    
+    return data
   }catch(err) {
     console.log(`Error : ${err.message}`)
-  //  res.status(500).send("something went wrong")
+    throw new Error("Something went wrong. During purchase. Please try again later.")
   }
 }
 
-export async function sendData(transId,network, planId, phone) {
+
+export async function sendData(transId, network, planId, phone) {
   const payload = {
     network: network,
     phone: '0'+phone,
@@ -55,8 +67,7 @@ export async function sendData(transId,network, planId, phone) {
     bypass: false,
     "request-id": `Data_${transId}`
   };
-  console.log(`payload to provider : ${payload}`)
-
+  console.log(payload);
   try {
     const response = await fetch(`${url}/data`,
       {
@@ -65,23 +76,24 @@ export async function sendData(transId,network, planId, phone) {
         body: JSON.stringify(payload)
       });
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+   /* 
+   if (!response.ok) {
+      throw new Error(`Something went wrong. Please try again later`);
     }
-
+*/
     const data = await response.json();
-    console.log('Success:', data);
     // Handle successful response here
-    return data;
-  } catch (error) {
-    console.error('Error:', error);
-    // Handle errors here
-    throw error;
+    console.log(data);
+    
+    return data
+  }catch(err) {
+    console.log(`Error: ${err.message}`)
+    throw new Error("Something went wrong. During purchase. Please try again later.")
   }
 }
+    
 
 
 // Call the function
 //await buyAirtime(1,100,9064498317)
 //await buyData(1,1,9064498317)
-

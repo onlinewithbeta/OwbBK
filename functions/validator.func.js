@@ -34,7 +34,7 @@ export const buyAirtimeValidator = [
 
   body('amount')
   .isFloat({
-    min: 100.01
+    min: 99
   }) // strictly greater than 100
   .withMessage('Amount must be greater than 100'),
 
@@ -195,3 +195,6 @@ export const resetPasswordValidator = [
   .matches(/[0-9]/)
   .withMessage("Password must contain at least one number"),
 ];
+
+
+

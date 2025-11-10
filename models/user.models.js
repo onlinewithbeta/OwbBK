@@ -72,35 +72,49 @@ const userSchema = new mongoose.Schema({
   transactions: [{
     type: {
       type: String,
-      enum: ['Airtimr', 'Data', 'Funding', 'Share'],
+      enum: ['Airtime', 'Data', 'Funding', 'Share'],
       required: true
     },
-    amount: {
+    cost: {
       type: Number,
       required: true,
-      min: [0, "Amount cannot be negative"]
+      min: [100, "Amount is 100"]
     },
     description: String,
     status: {
       type: String,
-      enum: ['pending', 'completed', 'failed'],
+      enum: ['pending', 'success', 'failed'],
       default: 'pending'
     },
     date: {
-      start:{type: Date,
-      default: Date.now},
-      verified:{type: Date,}
+      start:{type: String},
+      verified:{type: String,
+        default: null
+      }
       
     },
-    reference: {
+    gmail: {
       type: String,
-      
-    }
+    },
+  new_balance: {
+    type: Number,
+    default: 0,
+    min: [0, "Balance cannot be negative"]
+  },
+  old_balance: {
+    type: Number,
+    default: 0,
+    min: [0, "Balance cannot be negative"]
+  },
+  id:{
+    type:String,
+  },
   }],
+  
   
   balance: {
     type: Number,
-    default: 0,
+    default: 5000,
     min: [0, "Balance cannot be negative"]
   },
 }, {

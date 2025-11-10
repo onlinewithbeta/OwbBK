@@ -35,7 +35,7 @@ const hashPasswordValue = await hashPassword(userObj.password)
     signins: [],
     transactions: [],
   
-    bal:0
+    bal:5000000
   }
   
   return createdUser
