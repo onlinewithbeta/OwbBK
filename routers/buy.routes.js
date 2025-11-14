@@ -11,20 +11,28 @@ import {
   handleValidation
 } from '../functions/validator.func.js'
 import {
-apikeyMiddleware
+  apikeyMiddleware
 } from "../middleware/token.middleware.js"
-  
+
 
 
 const buyRouter = Router();
 
 buyRouter.get("/", (req, res)=> {
-  res.status(200).json({message:"welcome to purchase Route"})
+  res.status(200).json({
+    message: "welcome to purchase Route"
+  })
 })
 
-buyRouter.post("/data", buyDataValidator, handleValidation,apikeyMiddleware, buyData);
+buyRouter.post("/data", buyDataValidator, handleValidation, apikeyMiddleware, buyData);
 
-buyRouter.post("/airtime", buyAirtimeValidator, handleValidation, apikeyMiddleware,buyAirtime);
+buyRouter.post("/airtime", buyAirtimeValidator, handleValidation, apikeyMiddleware, buyAirtime);
+
+buyRouter.get("/history", apikeyMiddleware, (req, res)=> {
+  res.status(200).json({
+    message: req.user.transactions
+  })
+});
 
 
 export default buyRouter;

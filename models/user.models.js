@@ -93,9 +93,6 @@ const userSchema = new mongoose.Schema({
       }
       
     },
-    gmail: {
-      type: String,
-    },
   new_balance: {
     type: Number,
     default: 0,

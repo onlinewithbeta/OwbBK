@@ -1,44 +1,55 @@
-transactions: [{
-    type: {
-      type: String,
-      enum: ['Airtime', 'Data', 'Funding', 'Share'],
-      required: true
+import mongoose from "mongoose";
+
+const transactionSchema = new mongoose.Schema({
+  userTransaction:{type: {
+    type: String,
+    enum: ['Airtime', 'Data', 'Funding', 'Share'],
+    required: true
+  },
+  cost: {
+    type: Number,
+    required: true,
+    min: [0, "Amount cannot be negative"]
+  },
+  description: String,
+  status: {
+    type: String,
+    enum: ['pending', 'success', 'failed'],
+    default: 'pending'
     },
-    cost: {
-      type: Number,
-      required: true,
-      min: [0, "Amount cannot be negative"]
-    },
-    description: String,
-    status: {
-      type: String,
-      enum: ['pending', 'success', 'failed'],
-      default: 'pending'
-    },
-    date: {
-      start:{type: Date,
-      default: Date.now},
-      verified:{type: Date,
-        default: null
+  date: {
+      start: {
+        type: Date,
+      default: Date.now
+      },
+      verified: {
+        type: Date,
+      default: null
       }
-      
+
     },
-    gmail: {
+  new_balance: {
+      type: Number,
+    default: 0,
+      min: [0, "Balance cannot be negative"]
+    },
+  old_balance: {
+      type: Number,
+    default: 0,
+      min: [0, "Balance cannot be negative"]
+    },},
+  
+  gmail: {
       type: String,
     },
-    old_balance: {
-    type: Number,
-    default: 0,
-    min: [0, "Balance cannot be negative"]
-  },
-  new_balance: {
-    type: Number,
-    default: 0,
-    min: [0, "Balance cannot be negative"]
-  },
-  old_balance: {
-    type: Number,
-    default: 0,
-    min: [0, "Balance cannot be negative"]
-  },
-  }],
+  uniqueid: {
+      type: String,
+    },
+  userid: {
+      type: String,
+    },
+});
+
+  const transactions = mongoose.model("transactions", transactionSchema);
+
+  export default transactions;

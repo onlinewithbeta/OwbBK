@@ -23,7 +23,7 @@ authRouter.post('/signup', signupValidator, handleValidation, signUp)
 
 authRouter.post('/signin', signinValidator, handleValidation, signIn)
 
-authRouter.post('/otp', gmailValidator, handleValidation, requestOtp)
+authRouter.post('/requestotp', gmailValidator, handleValidation, requestOtp)
 
 authRouter.post('/changepassword', resetPasswordValidator, handleValidation, changePassword)
 

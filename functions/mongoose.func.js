@@ -2,14 +2,18 @@ import mongoose from "mongoose"
 
 
 import User from "../models/user.models.js";
+import Signin from "../models/signin.models.js";
+
 import {
   describeTransaction,
 } from "../functions/description.func.js";
 import {
   getCost,
+  createTransG
 } from "../functions/transaction.func.js";
 import {
   getCurrentDateTime,
+  getFiveMinutesFromNow,
   getDifferenceInMinutesS
 } from "../functions/moment.func.js";
 
@@ -34,19 +38,31 @@ export function getMongoId(item) {
   return item.toString();
 }
 
+
+export async function saveSignin(obj) {
+  try { 
+    //  throw new Error("the username is already taken")
+    const login = new Signin(obj);
+    await login.save();
+
+    return login;
+  }catch(err) {
+    throw new Error(`Could not sigin because ${err.message}`)
+  }
+}
+
+
 export async function saveUser(obj) {
   try {
     //  throw new Error("the username is already taken")
     const newUser = new User(obj);
     await newUser.save();
 
-    console.log(newUser)
-
+    return newUser;
   }catch(err) {
     throw new Error(`Could not create account because ${err.message}`)
   }
 }
-
 
 export async function findUserByAccessKey(key) {
 
@@ -57,7 +73,7 @@ export async function findUserByAccessKey(key) {
     if (user.length < 1) {
       console.log(user.length)
       //multiple users have the accessToken
-      throw new Error("Conflict in Access tokens")
+      throw new Error("User not found.")
     }
 
     return user[0];
@@ -66,13 +82,50 @@ export async function findUserByAccessKey(key) {
   }
 }
 
-export function findUserById(id) {
-  return {
-    username: "owb",
-    balance: 300,
-    gmail: "user@gmail.com"
+export async function findUserByGmail(gmail) {
+  const user = User.findOne({
+    gmail: gmail
+  })
+  if (!user) throw new Error ("user not found")
+
+  return user
+}
+
+export async function findUserByUsername(username) {
+  const user = User.findOne({
+    username: username
+  })
+  if (!user) throw new Error ("User not found")
+
+  return user
+}
+
+
+export async function resetOtp(user) {
+  try{
+    const gmail = user.gmail;
+    
+    let otp ={
+      value : randomDigits(6),
+      expires:getFiveMinutesFromNow()
+    }
+    
+    user.otp = otp;
+    
+    await saveUser(user);
+    
+    return user.otp
+  }catch(err){
+    
+    console.log(err);
+    throw new Error("Unable to reset and send otp")
   }
 }
+
+
+
+
+
 
 export async function pendTransaction(user, miniPayload, kind) {
   //description of transaction
@@ -81,9 +134,20 @@ export async function pendTransaction(user, miniPayload, kind) {
   //cost of transaction
   let cost = getCost(kind, miniPayload);;
 
-  const id = `${kind}_${randomDigits(11)}`;
+  let id = `${kind}_${randomDigits(11)}`;
+  if (kind === "Funding") id = miniPayload.trackId;
 
-  const transaction = {
+  //balances
+  let new_balance;
+  const old_balance = user.balance;
+
+  if (kind === "Funding") {
+    new_balance = user.balance + cost;
+  } else {
+    new_balance = user.balance - cost;
+  }
+
+  let transaction = {
     date: {
       start: Date(),
       verified: null
@@ -92,30 +156,32 @@ export async function pendTransaction(user, miniPayload, kind) {
     cost,
     description,
     status: "pending",
-    old_balance: user.balance,
+    old_balance: old_balance,
+    new_balance: new_balance,
     id: id,
-    new_balance: user.balance-cost,
   };
   //  console.log(user)
   //debit and record on user Object
-  user.balance = user.balance-cost;
+  if (kind !== "Funding") user.balance = new_balance;
+
   user.transactions.unshift(transaction)
   await user.save();
   //record globally
-
+  transaction = user.transactions[0];
   console.log("transactions Saved as pending")
 
-  let _id = user.transactions[0]._id;
+  let _id = transaction._id;
 
   _id = getMongoId(_id);
 
   return {
-    transId: `${id}`,
+    transId: id,
     _id,
     user
   }
 
 }
+
 
 export async function verifyTransaction(transactionRes, user, ref) {
   user = await User.findOne({
@@ -132,6 +198,7 @@ export async function verifyTransaction(transactionRes, user, ref) {
   }
 
   user.transactions[index].date.verified = getCurrentDateTime();
+  await createTransG(user.transactions[index], user.gmail)
   console.log("verified")
   //  console.log(user)
   await user.save();
@@ -145,9 +212,6 @@ export async function verifyTransaction(transactionRes, user, ref) {
   }
 
 }
-
-
-
 
 function getTransactionIndex(transactions, ref) {
   for (let i = 0; i < transactions.length; i++) {

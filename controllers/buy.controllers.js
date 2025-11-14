@@ -70,7 +70,7 @@ export async function buyAirtime(req, res) {
     //send the data
     //return respond from provider.
     const transactionRes = await sendAirtime(transId, networkId, amount, phone);
-console.log(transactionRes)
+    console.log(transactionRes)
     //verify if data was successful sent
     //record as successful
     await verifyTransaction(transactionRes, user, trans);

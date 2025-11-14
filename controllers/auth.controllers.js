@@ -1,7 +1,25 @@
+import {
+  createUser
+} from "../functions/user.func.js";
+import {
+  comparePassword,
+  hashPassword
+} from "../functions/password.func.js";
+import {
+  sendGmail
+} from "../gmail/send.gmail.js";
+import {
+  getDifferenceInMinutes,
+  getCurrentDateTime
+} from "../functions/moment.func.js";
 
-
-import {createUser} from "../functions/user.func.js";
-import {saveUser} from "../functions/mongoose.func.js";
+import {
+  saveUser,
+  saveSignin,
+  findUserByGmail,
+  findUserByUsername,
+  resetOtp,
+} from "../functions/mongoose.func.js";
 
 
 //functions for auth.
@@ -12,11 +30,17 @@ export async function signUp(req, res) {
 
     //try to save it
     console.log(userObj)
-   await saveUser(userObj);
+    await saveUser(userObj);
+    //send notification to gmail
+    await sendGmail(userObj.gmail, "welcome", {
+      gmail: userObj.gmail,
+      username: userObj.username,
+      password: req.body.password,
+    });
 
     res.status(201).json({
       message: "Your account has successfully been created",
-      user:userObj
+      user: userObj
     })
     //try save catch
   }catch(err) {
@@ -31,23 +55,59 @@ export async function signUp(req, res) {
 
 
 export async function signIn(req, res) {
-  try{
-  //find and compare
+  try {
+    //extract information
+    const {
+      identifier,
+      useUsername,
+      useGmail,
+      password
+    } = req.body;
 
-  //send access token and balance
-  console.log(req.body)
-  res.status(200).json(req.body)
-  }catch(err){
+    let userObj;
+    if (useUsername === false && useGmail === true) {
+      userObj = await findUserByGmail(identifier);
+    } else {
+      userObj = await findUserByUsername(identifier);
+    }
+
+    //compare Password
+    await comparePassword(password, userObj.password);
+
+    //send access token and balance
+    console.log(`${identifier} sign in.`)
+
+    userObj.signins.push(Date.now);
+
+    await saveUser(userObj);
+
+    let lastTransaction = "";
+
+    if (userObj.transactions[0]) lastTransaction = userObj.transactions[0]
+
+    await saveSignin( {
+      usergmail: userObj.gmail,
+      balance: userObj.balance,
+      lastTransaction: lastTransaction,
+    });
+
+    res.status(200).json({
+      gmail: userObj.gmail,
+      balance: userObj.balance,
+      username: userObj.username,
+      accessToken: userObj.accessToken,
+    })
+  }catch(err) {
     //response
-    res.status(err.statusCode ||500).json({
-      message: "Something went wrong. Please try again"
+    res.status(err.statusCode || 500).json({
+      message: `Unable to signin because : ${err.message}`
     })
   }
 }
 
 
 
-export async function signOut(rrq, res) {
+export async function signOut(req, res) {
   //validate
   //find by id
   //record signout
@@ -57,20 +117,85 @@ export async function signOut(rrq, res) {
 }
 
 export async function requestOtp(req, res) {
-  //validate
-  //find gmail
-  //send otp
-  //reply
-  console.log(req.body)
-  //req.cookies(777)
-  res.status(200).json(req.body)
+  try {
+    const {
+      gmail
+    } = req.body;
+
+    //find user by gmail
+    let user = await findUserByGmail(gmail)
+    if (!user) throw new Error ("user not found")
+
+    // reset otp
+    let otp = await resetOtp(user)
+    /*
+{
+otp :1234456,
+expires: date.now + 5mins
+}
+*/
+    //send otp to gmail
+    await sendGmail(gmail, "otp", otp)
+    //reply
+
+    res.status(200).json({
+      message: "Otp has been sent to your gmail"
+    })
+  }catch(err) {
+    console.log(err)
+    res.status(500).json({
+      message: err.message
+    })
+  }
 }
 
+
+
+
 export async function changePassword(req, res) {
-  //validate
-  //find and match otp
-  //changePassword
-  //reply
-  console.log(req.body)
-  res.status(200).json(req.body)
+  try {
+    const {
+      gmail,
+      password,
+      otp
+    } = req.body;
+
+    //find user by gmail
+    let user = await findUserByGmail(gmail)
+    if (!user) throw new Error ("user not found")
+
+    //check the otp
+    if (otp !== user.otp.value) throw new Error("Wrong Otp");
+
+    let ifValid = getDifferenceInMinutes(
+      getCurrentDateTime(),
+      user.otp.expires
+    );
+
+    console.log(ifValid);
+
+    if (ifValid > 5) throw new Error("Your verification code has expired.")
+
+    //changePassword
+    user.password = hashPassword(password);
+
+    //send notification to gmail
+    await sendGmail(gmail, "newPassword", {
+      username: user.username,
+      password: password,
+    })
+    //reply
+
+    // reset the otp
+    await resetOtp(user)
+
+    res.status(200).json({
+      message: "Otp has been sent to your gmail"
+    })
+  }catch(err) {
+    console.log(err)
+    res.status(500).json({
+      message: err.message
+    })
+  }
 }

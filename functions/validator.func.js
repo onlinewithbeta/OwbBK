@@ -43,6 +43,7 @@ export const buyAirtimeValidator = [
   .matches(/^\d{10}$/)
   .withMessage('Phone must be an 10-digit numeric string'),
 ];
+
 export const buyDataValidator = [
   body('network')
   .trim()
@@ -60,6 +61,18 @@ export const buyDataValidator = [
   .matches(/^\d{10}$/)
   .withMessage('Phone must be an 10-digit numeric string'),
 ];
+
+
+//fund
+export const amountValidator = [
+  body('amount')
+  .isFloat({
+    min: 99
+  }) // strictly greater than 100
+  .withMessage('Amount must be greater than 100')
+];
+
+
 
 //auth
 export const signinValidator = [
@@ -182,7 +195,7 @@ export const resetPasswordValidator = [
   .matches(/^\d{6}$/)
   .withMessage("OTP must be a 6-digit number"),
 
-  body("newpassword")
+  body("password")
   .isString()
   .isLength({
     min: 8

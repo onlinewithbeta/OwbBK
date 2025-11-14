@@ -18,13 +18,10 @@ export async function apikeyMiddleware(req, res, next) {
     const user = await findUserByAccessKey(APIKEY);
 
     if (!user.gmail) {
-      
       console.log("User not found")
-      
-      return res.status(401).json({
-        message: 'Invalid API key'
-      });
+        throw new Error("Invalid API ke")
     }
+      
 
     // Attach user to request
     req.user = user;
@@ -33,7 +30,7 @@ export async function apikeyMiddleware(req, res, next) {
   } catch (error) {
     console.error('API key middleware error:', error);
     return res.status(500).json({
-      message: 'Server busy. Please try again later',
+      message: error.message || 'Server busy. Please try again later',
     });
   }
 }
@@ -66,6 +63,11 @@ export function getApiKey(headers) {
     return apiKey.substring(7).trim();
   }
 
+  // Extract from Token token
+  if (apiKey.startsWith('Token ')) {
+    return apiKey.substring(6).trim();
+  }
+  
   // Extract from Basic auth
   if (apiKey.startsWith('Basic ')) {
     return apiKey.substring(6).trim();
