@@ -29,7 +29,6 @@ export async function signUp(req, res) {
     const userObj = await createUser(req.body)
 
     //try to save it
-    console.log(userObj)
     await saveUser(userObj);
     //send notification to gmail
     await sendGmail(userObj.gmail, "welcome", {
@@ -40,7 +39,7 @@ export async function signUp(req, res) {
 
     res.status(201).json({
       message: "Your account has successfully been created",
-      user: userObj
+      key: userObj.accessToken
     })
     //try save catch
   }catch(err) {
@@ -190,7 +189,7 @@ export async function changePassword(req, res) {
     await resetOtp(user)
 
     res.status(200).json({
-      message: "Otp has been sent to your gmail"
+      message: "Password changed"
     })
   }catch(err) {
     console.log(err)

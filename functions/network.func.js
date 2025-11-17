@@ -16,7 +16,7 @@ export function getNetworkId(network) {
 }
 
 // Data plans for different networks
-const dataPlans = {
+ const dataPlans = {
   mtn:[
   {
     "networkId": 1,
@@ -31,7 +31,7 @@ const dataPlans = {
     "networkId": 1,
     "network": "mtn",
     "data": "500mb",
-    "price": 580,
+    "price": 480,
     "days": 7,
     "id": 89,
     "type": "gifting"

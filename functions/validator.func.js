@@ -83,10 +83,6 @@ export const signinValidator = [
   })
   .withMessage("Password must be at least 8 characters long"),
 
-  body("rememberMe")
-  .isBoolean()
-  .withMessage("rememberMe must be a boolean"),
-
   body("useGmail")
   .isBoolean()
   .withMessage("useGmail must be a boolean"),
@@ -114,6 +110,7 @@ export const signinValidator = [
     return true;
   }),
 ];
+
 export const signupValidator = [
   
   body("username")
@@ -157,7 +154,6 @@ export const signupValidator = [
   .matches(/^\d{10}$/)
   .withMessage("Phone number must be a 10-digit string"),
 ];
-
 
 export const gmailValidator = [
   body("gmail")

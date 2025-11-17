@@ -15,7 +15,7 @@ import cfg from "./cfg.js"
 
 
 app.use(express.json())
-app.use(cors())
+app.use(cors("*"))
 app.use((req, res, next)=> {
   req.reqtime = getCurrentDateTime().toString();
   console.log(req.reqtime);
@@ -25,6 +25,7 @@ app.use((req, res, next)=> {
 app.use('/v1/auth', authRouter)
 app.use('/v1/buy', buyRouter)
 app.use('/v1/fund', fundRouter)
+
 
 app.use((req, res)=> {
   res.status(404).send("Not found here.")

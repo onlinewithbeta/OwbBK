@@ -76,8 +76,9 @@ export async function buyAirtime(req, res) {
     await verifyTransaction(transactionRes, user, trans);
 
     //send message to user
-    res.status(201).json({
-      message: `You successful bought ₦${amount} Airtime for ${phone}`
+    res.status(200).json({
+      message: `You successful bought ₦${amount} Airtime for ${phone}`,
+      balance:user.balance
     })
   }catch(err) {
     console.error(err.message)
@@ -144,7 +145,7 @@ export async function buyData(req, res) {
     //send message to user
     res.status(201).json({
       message: "Purchase successful",
-      body: body
+      balance: user.balance
     })
 
   }catch(err) {
