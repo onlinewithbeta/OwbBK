@@ -12,18 +12,28 @@ import {
 
 
 const transporter = nodemailer.createTransport({
-  service: "gmail", // Use the Gmail service
+  host: "smtp.gmail.com",
+  port: 587,
+  secure: false, // Use TLS
   auth: {
-    user: "onlinewithbeta@gmail.com", // Your Gmail address
-    pass: cfg.GMAILPASS
-    // Your password or app password
-   // pass: process.env.GMAILPASS jnxk lkgf itxs nfgm // Your password or app password
+    user: "onlinewithbeta@gmail.com",
+    pass: cfg.GMAILPASS // Make sure this is an App Password
+  },
+  connectionTimeout: 30000, // 30 seconds
+  greetingTimeout: 30000,
+  socketTimeout: 30000,
+  // Add retry logic
+  retries: 3,
+  // Better handling for Render's network
+  tls: {
+    rejectUnauthorized: false
   }
 });
 
+
  async function sendEmail(Recipient, Subject, text, html) {
   try {
-    console.log("sendinh Email");
+    console.log("sending Email");
     const info = await transporter.sendMail({
       from: '"onlinewithbeta" <onlinewithbeta@gmail.com>', // Sender info
       to: Recipient, // Recipient address

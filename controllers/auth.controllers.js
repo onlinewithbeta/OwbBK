@@ -31,12 +31,12 @@ export async function signUp(req, res) {
     //try to save it
     await saveUser(userObj);
     //send notification to gmail
-    await sendGmail(userObj.gmail, "welcome", {
+    /*   await sendGmail(userObj.gmail, "welcome", {
       gmail: userObj.gmail,
       username: userObj.username,
       password: req.body.password,
     });
-
+*/
     res.status(201).json({
       message: "Your account has successfully been created. Please signin",
       key: userObj.accessToken
@@ -62,7 +62,7 @@ export async function signIn(req, res) {
       useGmail,
       password
     } = req.body;
-console.log(req.body)
+    console.log(req.body)
     let userObj;
     if (useUsername === false && useGmail === true) {
       userObj = await findUserByGmail(identifier);
@@ -70,10 +70,10 @@ console.log(req.body)
       userObj = await findUserByUsername(identifier);
     }
 
-if(!userObj) throw new Error("Server can't find this user.")
+    if (!userObj) throw new Error("Server can't find this user.")
     //compare Password
     let isMatch = await comparePassword(password, userObj.password);
-if(!isMatch) throw new Error("user sent wrong password")
+    if (!isMatch) throw new Error("user sent wrong password")
     //send access token and balance
     console.log(`${identifier} sign in.`)
 
@@ -96,7 +96,7 @@ if(!isMatch) throw new Error("user sent wrong password")
       balance: userObj.balance,
       username: userObj.username,
       key: userObj.accessToken,
-      message:`Hello back, ${userObj.username}`
+      message: `Hello back, ${userObj.username}`
     })
   }catch(err) {
     //response
@@ -180,7 +180,7 @@ export async function changePassword(req, res) {
     if (ifValid > 0) {
       throw new Error("Your verification code has expired.")
       console.log("Your verification code has expired.")
-}
+    }
     //changePassword
     user.password = hashPassword(password);
 
