@@ -10,18 +10,15 @@ import {
   newPasswordText,
 } from "./template.gmail.js";
 
-
 const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 465,
-  secure: true, // Use SSL
-  auth: {
-    user: "onlinewithbeta@gmail.com",
+    service: "gmail", // Use the Gmail service
+    auth: {
+        user: "onlinewithbeta@gmail.com",
     pass: cfg.GMAILPASS
-  },
-  connectionTimeout: 30000,
-  socketTimeout: 30000
+    }
 });
+
+
 
 
  async function sendEmail(Recipient, Subject, text, html) {
