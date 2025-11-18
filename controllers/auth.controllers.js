@@ -185,10 +185,12 @@ export async function changePassword(req, res) {
     user.password = hashPassword(password);
 
     //send notification to gmail
-    await sendGmail(gmail, "newPassword", {
+   /* await sendGmail(gmail, "newPassword", {
       username: user.username,
       password: password,
     })
+    
+    */
     //reply
 
     // reset the otp

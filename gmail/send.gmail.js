@@ -67,7 +67,8 @@ async function sendEmail(Recipient, Subject, text, html) {
             error: error.message
         });
         
-        throw new Error(`Email delivery failed: ${error.message}`);
+       // throw new Error(`Email delivery failed: ${error.message}`);
+        throw new Error(`Currently unable to send otp. please contact 09117624342 ~Osiaru Group of Companies.`);
     }
 }
 
