@@ -49,7 +49,10 @@ console.log(payload);
 
     let data = await response.json();
     // Handle successful response here
+    console.log("data");
     console.log(data);
+    console.log(response);
+    console.log("data");
     
     return data
   }catch(err) {
@@ -84,6 +87,7 @@ export async function sendData(transId, network, planId, phone) {
     const data = await response.json();
     // Handle successful response here
     console.log(data);
+    console.log(response);
     
     return data
   }catch(err) {
