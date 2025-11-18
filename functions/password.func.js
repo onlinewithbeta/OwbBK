@@ -30,6 +30,6 @@ export async function comparePassword(password, hashedPassword) {
     const isMatch = await bcrypt.compare(password, hashedPassword);
     return isMatch;
   } catch (error) {
-    throw new Error(`Password comparison failed: ${error.message}`);
+    return false
   }
 }

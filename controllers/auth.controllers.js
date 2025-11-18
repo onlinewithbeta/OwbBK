@@ -38,7 +38,7 @@ export async function signUp(req, res) {
     });
 
     res.status(201).json({
-      message: "Your account has successfully been created",
+      message: "Your account has successfully been created. Please signin",
       key: userObj.accessToken
     })
     //try save catch
@@ -62,7 +62,7 @@ export async function signIn(req, res) {
       useGmail,
       password
     } = req.body;
-
+console.log(req.body)
     let userObj;
     if (useUsername === false && useGmail === true) {
       userObj = await findUserByGmail(identifier);
@@ -70,9 +70,10 @@ export async function signIn(req, res) {
       userObj = await findUserByUsername(identifier);
     }
 
+if(!userObj) throw new Error("Server can't find this user.")
     //compare Password
-    await comparePassword(password, userObj.password);
-
+    let isMatch = await comparePassword(password, userObj.password);
+if(!isMatch) throw new Error("user sent wrong password")
     //send access token and balance
     console.log(`${identifier} sign in.`)
 
@@ -94,7 +95,8 @@ export async function signIn(req, res) {
       gmail: userObj.gmail,
       balance: userObj.balance,
       username: userObj.username,
-      accessToken: userObj.accessToken,
+      key: userObj.accessToken,
+      message:`Hello back, ${userObj.username}`
     })
   }catch(err) {
     //response
@@ -167,14 +169,18 @@ export async function changePassword(req, res) {
     if (otp !== user.otp.value) throw new Error("Wrong Otp");
 
     let ifValid = getDifferenceInMinutes(
-      getCurrentDateTime(),
-      user.otp.expires
+      user.otp.expires,
+      getCurrentDateTime()
     );
 
+    console.log("ifValid");
     console.log(ifValid);
+    console.log("ifValid");
 
-    if (ifValid > 5) throw new Error("Your verification code has expired.")
-
+    if (ifValid > 0) {
+      throw new Error("Your verification code has expired.")
+      console.log("Your verification code has expired.")
+}
     //changePassword
     user.password = hashPassword(password);
 

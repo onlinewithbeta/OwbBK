@@ -110,6 +110,8 @@ export async function resetOtp(user) {
       expires:getFiveMinutesFromNow()
     }
     
+    console.log(otp)
+    
     user.otp = otp;
     
     await saveUser(user);
@@ -142,7 +144,7 @@ export async function pendTransaction(user, miniPayload, kind) {
   const old_balance = user.balance;
 
   if (kind === "Funding") {
-    new_balance = user.balance + cost;
+    new_balance = user.balance + Number(cost);
   } else {
     new_balance = user.balance - cost;
   }

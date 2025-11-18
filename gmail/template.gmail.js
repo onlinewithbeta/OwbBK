@@ -26,7 +26,7 @@ export function otpHtml(otp) {
           </div>
           <div class="content">
               <h2>Hello,</h2>
-              <p>Please use the following One-Time Password (OTP) to complete your verification process. This code will expire in 5 minutes.</p>
+              <p>Please use the following One-Time Password (OTP) to complete your verification process. This code will expire in 2 minutes.</p>
               
               <div class="otp-code">${otp}</div>
               
@@ -50,7 +50,7 @@ Email Verification
 
 Hello,
 
-Please use the following One-Time Password (OTP) to complete your verification process. This code will expire in 5 minutes.
+Please use the following One-Time Password (OTP) to complete your verification process. This code will expire in 2 minutes.
 
 Your OTP: ${otp}
 

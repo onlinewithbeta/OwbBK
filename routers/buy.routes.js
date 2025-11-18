@@ -29,9 +29,7 @@ buyRouter.post("/data", buyDataValidator, handleValidation, apikeyMiddleware, bu
 buyRouter.post("/airtime", buyAirtimeValidator, handleValidation, apikeyMiddleware, buyAirtime);
 
 buyRouter.get("/history", apikeyMiddleware, (req, res)=> {
-  res.status(200).json({
-    message: req.user.transactions
-  })
+  res.status(200).json(req.user.transactions)
 });
 
 

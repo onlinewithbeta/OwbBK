@@ -5,13 +5,15 @@ export function getCurrentDateTime() {
 
 // 2. Get date 5 minutes from now
 export function getFiveMinutesFromNow() {
-  return new Date(Date.now() + 5 * 60 * 1000);
+  return new Date(Date.now() + 2 * 60 * 1000);
 }
 
 // 3. Get difference in minutes between two dates
 export function getDifferenceInMinutes(date1, date2) {
-  console.log(date1,date2)
-  const diffInMs = Math.abs(date2 - date1);
+  console.log(date2,"-",date1)
+  console.log("currentTime","-","Expiretime")
+  
+  const diffInMs = date2 - date1;
   return Math.floor(diffInMs / (1000 * 60));
 }
 
