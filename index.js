@@ -2,6 +2,8 @@ import express from "express"
 import cors from "cors"
 const app = express();
 
+//Production ready
+
 import {
   connectDB
 } from "./functions/mongoose.func.js"
