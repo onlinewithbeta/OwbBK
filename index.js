@@ -26,9 +26,11 @@ app.use((req, res, next)=> {
   next()
 })
 
+
 app.use('/v1/auth', authRouter)
 app.use('/v1/buy', buyRouter)
 app.use('/v1/fund', fundRouter)
+
 
 app.use((req, res)=> {
   res.status(404).send("Not found here.")
