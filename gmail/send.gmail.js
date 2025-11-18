@@ -1,4 +1,5 @@
 import nodemailer from "nodemailer";
+import cfg from '../cfg.js';
 
 import {
   otpHtml,
@@ -14,13 +15,15 @@ const transporter = nodemailer.createTransport({
   service: "gmail", // Use the Gmail service
   auth: {
     user: "onlinewithbeta@gmail.com", // Your Gmail address
-    pass: "jnxk lkgf itxs nfgm" // Your password or app password
-   // pass: process.env.GMAILPASS // Your password or app password
+    pass: "cfg.GMAILPASS
+    // Your password or app password
+   // pass: process.env.GMAILPASS jnxk lkgf itxs nfgm // Your password or app password
   }
 });
 
  async function sendEmail(Recipient, Subject, text, html) {
   try {
+    console.log("sendinh Email");
     const info = await transporter.sendMail({
       from: '"onlinewithbeta" <onlinewithbeta@gmail.com>', // Sender info
       to: Recipient, // Recipient address
@@ -30,7 +33,7 @@ const transporter = nodemailer.createTransport({
     });
 
     console.log("Email sent");
-    //console.log(info);
+    console.log(info);
   } catch (error) {
     console.error("Error sending email:", error.message);
   //  throw new Error(error.message)
