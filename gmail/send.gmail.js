@@ -13,21 +13,14 @@ import {
 
 const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
-  port: 587,
-  secure: false, // Use TLS
+  port: 465,
+  secure: true, // Use SSL
   auth: {
     user: "onlinewithbeta@gmail.com",
-    pass: cfg.GMAILPASS // Make sure this is an App Password
+    pass: cfg.GMAILPASS
   },
-  connectionTimeout: 30000, // 30 seconds
-  greetingTimeout: 30000,
-  socketTimeout: 30000,
-  // Add retry logic
-  retries: 3,
-  // Better handling for Render's network
-  tls: {
-    rejectUnauthorized: false
-  }
+  connectionTimeout: 30000,
+  socketTimeout: 30000
 });
 
 
@@ -46,7 +39,7 @@ const transporter = nodemailer.createTransport({
     console.log(info);
   } catch (error) {
     console.error("Error sending email:", error.message);
-  //  throw new Error(error.message)
+   throw new Error(error.message)
   }
 }
 
