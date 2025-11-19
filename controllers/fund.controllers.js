@@ -21,7 +21,7 @@ export async function fundAccount (req, res, next) {
     
     //rwake wk
     let readyRes = await fetch(cfg.wk)
-    if(readyRes.status!==200) throw new Error("Please try again")
+    
     
     await pendTransaction(req.user,{
       funds:req.body.amount,

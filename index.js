@@ -33,7 +33,7 @@ app.use('/v1/fund', fundRouter)
 
 
 app.use((req, res)=> {
-  res.status(404).send("Not found here.")
+  res.status(200).json("Not found here.")
 })
 
 

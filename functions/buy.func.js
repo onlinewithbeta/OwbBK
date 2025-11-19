@@ -68,7 +68,7 @@ export async function sendData(transId, network, planId, phone) {
     phone: '0'+phone,
     data_plan: planId,
     bypass: false,
-    "request-id": `Data_${transId}`
+    "request-id": `${transId}`
   };
   console.log(payload);
   try {
