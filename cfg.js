@@ -3,6 +3,7 @@ dotenv.config()
 
 const cfg = {
   URL: process.env.URL,
+  wk: process.env.WK,
   PORT: process.env.PORT,
   payKey: process.env.PAYKEY,
   ACT: process.env.ACT,

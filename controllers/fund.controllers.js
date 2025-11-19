@@ -6,6 +6,8 @@ import {
   fund
 } from "../functions/fund.func.js";
 
+import cfg from '../cfg.js';
+
 
 
 // Fund route handler fund
@@ -17,7 +19,9 @@ export async function fundAccount (req, res, next) {
       amount: req.body.amount
     });
     
-    
+    //rwake wk
+    let readyRes = await fetch(cfg.wk)
+    if(readyRes.status!==200) throw new Error("Please try again")
     
     await pendTransaction(req.user,{
       funds:req.body.amount,
