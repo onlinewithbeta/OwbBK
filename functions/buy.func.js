@@ -37,7 +37,7 @@ export async function sendAirtime(transId, network, amount, phone) {
 
 console.log(payload);
 
-    let response = await fetch(`${url}/topup`, {
+    let response = await fetch(`${url}/airtime`, {
       method: 'POST',
       headers: headers,
       body: JSON.stringify(payload)
