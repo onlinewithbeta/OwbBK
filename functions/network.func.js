@@ -4,9 +4,9 @@ export function getNetworkId(network) {
   if (network === 'mtn') {
     networkId = 1;
   } else if (network === 'glo') {
-    networkId = 2;
-  } else if (network === 'airtel') {
     networkId = 3;
+  } else if (network === 'airtel') {
+    networkId = 2;
   } else {
     throw new Error('network is unknown')
   }
