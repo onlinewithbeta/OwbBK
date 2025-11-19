@@ -122,7 +122,8 @@ export async function buyData(req, res) {
     //return tracking ID
     const minipayLoad = {
       bundle,
-      phone
+      phone,
+      network
     };
 
     const trans = await pendTransaction(user, minipayLoad, "Data");

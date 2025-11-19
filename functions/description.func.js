@@ -2,7 +2,7 @@ export function describeTransaction(miniPayload, kind) {
   let statement;
   if (kind === 'Data') {
 
-    statement = `Bought ${miniPayload.bundle.data} of ${kind} Data for ${miniPayload.phone}.`;
+    statement = `Bought ${miniPayload.bundle.data} of ${miniPayload.network} Data for ${miniPayload.phone}.`;
 
   } else if (kind === 'Airtime') {
 
