@@ -21,7 +21,7 @@ const transporter = nodemailer.createTransport({
         pass: process.env.GMAIL_PASS || cfg.GMAILPASS
     }
 });
-
+/*
 // Verify transporter on startup
 transporter.verify((error) => {
     if (error) {
@@ -31,6 +31,7 @@ transporter.verify((error) => {
     }
 });
 
+*/
 async function sendEmail(Recipient, Subject, text, html) {
     // Input validation
     if (!Recipient || !Subject) {
@@ -68,7 +69,7 @@ async function sendEmail(Recipient, Subject, text, html) {
         });
         
        // throw new Error(`Email delivery failed: ${error.message}`);
-        throw new Error(`Currently unable to send otp. please contact 09117624342 ~Osiaru Group of Companies.`);
+       throw new Error(`Currently unable to send otp. please contact 09117624342 ~Osiaru Group of Companies.`);
     }
 }
 
