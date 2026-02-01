@@ -96,7 +96,7 @@ export async function signIn(req, res) {
       balance: userObj.balance,
       username: userObj.username,
       key: userObj.accessToken,
-      message: `Hello back, ${userObj.username}`
+      message: `welcome back, ${userObj.username}`
     })
   }catch(err) {
     //response
