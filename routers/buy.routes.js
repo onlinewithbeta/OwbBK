@@ -536,7 +536,7 @@ console.log("hit")
    price: 1050,
    days: 30,
    id: 123,
-   extra: "1.548 Night",
+   extra: "1.5GB Night",
    type: "gifting"
   },
   {
@@ -574,7 +574,7 @@ console.log("hit")
    network: "glo",
    data: "5 GB",
    price: 1550,
-   days: 60,
+   days: 30,
    id: 124,
    extra: "3GB Night",
    type: "gifting"
