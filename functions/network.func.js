@@ -591,16 +591,6 @@ const dataPlans = {
    networkId: 3,
    network: "glo",
    data: "10 GB",
-   price: 2000,
-   days: 7,
-   id: 122,
-   extra: "",
-   type: "gifting"
-  },
-  {
-   networkId: 3,
-   network: "glo",
-   data: "10 GB",
    price: 3050,
    days: 30,
    id: "n26",
